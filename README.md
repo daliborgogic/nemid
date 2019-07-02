@@ -4,7 +4,7 @@ Environment Variables
 
 ```bash
 $ cat > .env << EOL
-export PASSWORD=
+export PASSWORD=Test1234
 export PASS_PHRASE=
 export ORIGIN=
 EOL
