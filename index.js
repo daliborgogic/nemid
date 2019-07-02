@@ -7,12 +7,13 @@ const {
 } = require('crypto')
 
 const {
-  PASSWORD = 'Test1234',
-  PASS_PHRASE = '1234'
+  PASSWORD,
+  PASS_PHRASE,
+  ORIGIN
 } = process.env
 
 const privateKey = readFileSync('./certs/private.pem')
-const publicKey = readFileSync('./certs/public.pem')
+const publicKey = readFileSync('./certs/private.pem')
 
 const getSignature = input => {
   const sign = createSign('RSA-SHA256')
@@ -34,7 +35,10 @@ const verifyResult = (input, output) => {
 
   const publicKeyBuf = Buffer.from(publicKey).toString('ascii')
   const signatureBuf = new Buffer(output, 'base64') // Bug ??? with Buffer.from
-  const result = verifier.verify(publicKeyBuf, signatureBuf)
+  const result = verifier.verify({
+    key: publicKeyBuf,
+    passphrase: PASS_PHRASE
+  }, signatureBuf)
 
   return result
 }
@@ -68,7 +72,7 @@ async function generateParams (options) {
   // Current time when generating parameters. The timestamp parameter
   // is converted to UTC and must match the NemID server time.
   // NemID accepts timestamps within the boundaries of 3 minutes.
-  const TIMESTAMP = offsetUTC()
+  const TIMESTAMP = offsetUTC(2)
 
 
   // Base64 and SHA256 Encode it
@@ -100,9 +104,7 @@ module.exports = async (req, res) => {
   res.setHeader('content-type', 'text/html')
 
   const TIMESTAMP = +new Date
-  const params = JSON.stringify(await generateParams({
-    ORIGIN: 'https://nemid.paragraffen.dk',
-  }), null, 2)
+  const params = await generateParams({ ORIGIN })
 
   return `<iframe
     id="nemid_iframe"
