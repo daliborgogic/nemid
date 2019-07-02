@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "###",
+  "main": "index.js",
+  "scripts": {
+    "dev": "micro-dev -p 3003",
+    "start": "micro -p 3003"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "micro": "^9.3.4",
+    "node-forge": "^0.8.5",
+    "normalize-object": "^2.0.1",
+    "pem": "^1.14.2"
+  },
+  "devDependencies": {
+    "micro-dev": "^3.0.0"
+  }
+}
