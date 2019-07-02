@@ -50,6 +50,7 @@ async function generateParams (options) {
   // NemID JS Client. The JS Client will abort with `APP001` or `APP007``
   // if a postMessage command is received from any other origin.
   const ORIGIN = Buffer.from(options.ORIGIN).toString('base64')
+  const LANGUAGE = 'dk'
 
   // Trim certificate
   let ret = publicKey.toString().replace(/-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----/g, '')
@@ -93,48 +94,50 @@ module.exports = async (req, res) => {
   const TIMESTAMP = +new Date
   const params = await generateParams({ ORIGIN, TIMESTAMP })
 
-  return `
-  <iframe
-    id="nemid_iframe"
-    allowfullscreen="true"
-    scrolling="no"
-    frameborder="0"
-    style="width: 250px; height: 250px"
-    src="https://appletk.danid.dk/launcher/lmt/${TIMESTAMP}"
-  ></iframe>
+  return `<html lang="da-DK">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <iframe
+      id="nemid_iframe"
+      allowfullscreen="true"
+      scrolling="no"
+      frameborder="0"
+      style="width: 250px; height: 250px"
+      src="https://appletk.danid.dk/launcher/lmt/${TIMESTAMP}"
+    ></iframe>
 
-  <form method="post" action="#" name="postBackForm">
-      <input type="hidden" name="response" value=""/>
-  </form>
+    <form method="post" action="#" name="postBackForm">
+        <input type="hidden" name="response" value=""/>
+    </form>
 
-  <script type="text/x-nemid" id="nemid_parameters">
-    ${JSON.stringify(params, null, 2)}
-  </script>
+    <script type="text/x-nemid" id="nemid_parameters">
+      ${JSON.stringify(params, null, 2)}
+    </script>
 
-  <script>
-    function onNemIDMessage (event) {
-      if (event.origin !== 'https://appletk.danid.dk') return
-      let postMessage = {}
-      let message
-      const frame = document.getElementById('nemid_iframe').contentWindow
-      message = JSON.parse(event.data)
-      console.log(JSON.stringify(message, null, 2))
-      if (message.command === 'SendParameters') {
-        const htmlParameters = document.getElementById("nemid_parameters").innerHTML
-        postMessage.command = "parameters"
-        postMessage.content = htmlParameters
-        frame.postMessage(JSON.stringify(postMessage), 'https://appletk.danid.dk/launcher/std/${TIMESTAMP}')
+    <script>
+      function onNemIDMessage (event) {
+        if (event.origin !== 'https://appletk.danid.dk') return
+        let postMessage = {}
+        let message
+        const frame = document.getElementById('nemid_iframe').contentWindow
+        message = JSON.parse(event.data)
+        console.log(JSON.stringify(message, null, 2))
+        if (message.command === 'SendParameters') {
+          const htmlParameters = document.getElementById("nemid_parameters").innerHTML
+          postMessage.command = "parameters"
+          postMessage.content = htmlParameters
+          frame.postMessage(JSON.stringify(postMessage), 'https://appletk.danid.dk/launcher/std/${TIMESTAMP}')
+        }
+
+        if (message.command === 'changeResponseAndSubmit') {
+          // document.postBackForm.response.value = message.content
+          // document.postBackForm.submit()
+        }
       }
-
-      if (message.command === 'changeResponseAndSubmit') {
-        // document.postBackForm.response.value = message.content
-        // document.postBackForm.submit()
+      if (window.addEventListener) {
+        window.addEventListener('message', onNemIDMessage)
+      } else if (window.attachEvent) {
+        window.attachEvent('onmessage', onNemIDMessage)
       }
-    }
-    if (window.addEventListener) {
-      window.addEventListener('message', onNemIDMessage)
-    } else if (window.attachEvent) {
-      window.attachEvent('onmessage', onNemIDMessage)
-    }
-  </script>`
+    </script>
+  </html>`
 }
