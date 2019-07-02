@@ -94,8 +94,7 @@ module.exports = async (req, res) => {
   const TIMESTAMP = +new Date
   const params = await generateParams({ ORIGIN, TIMESTAMP })
 
-  return `<html lang="da-DK">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  return `<meta name="viewport" content="width=device-width, initial-scale=1">
     <iframe
       id="nemid_iframe"
       allowfullscreen="true"
@@ -129,7 +128,7 @@ module.exports = async (req, res) => {
         }
 
         if (message.command === 'changeResponseAndSubmit') {
-          // document.postBackForm.response.value = message.content
+          document.postBackForm.response.value = message.content
           // document.postBackForm.submit()
         }
       }
@@ -138,6 +137,5 @@ module.exports = async (req, res) => {
       } else if (window.attachEvent) {
         window.attachEvent('onmessage', onNemIDMessage)
       }
-    </script>
-  </html>`
+    </script>`
 }
