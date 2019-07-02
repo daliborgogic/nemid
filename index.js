@@ -33,7 +33,7 @@ const verifyResult = (input, output) => {
 
   verifier.update(input)
 
-  const publicKeyBuf = Buffer.from(publicKey).toString('ascii')
+  const publicKeyBuf = Buffer.from(publicKey).toString() // 'ascii'
   const signatureBuf = new Buffer(output, 'base64') // Bug ??? with Buffer.from
   const result = verifier.verify({
     key: publicKeyBuf,
@@ -67,12 +67,12 @@ async function generateParams (options) {
   // Trim certificate
   let ret = publicKey.toString().replace(/-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----/g, '')
 
-  const SP_CERT = Buffer.from(ret).toString('base64')
+  const SP_CERT = Buffer.from(publicKey).toString('base64')
 
   // Current time when generating parameters. The timestamp parameter
   // is converted to UTC and must match the NemID server time.
   // NemID accepts timestamps within the boundaries of 3 minutes.
-  const TIMESTAMP = offsetUTC(2)
+  const TIMESTAMP = Buffer.from(options.TIMESTAMP.toString()).toString('base64') //offsetUTC()
 
 
   // Base64 and SHA256 Encode it
@@ -83,9 +83,9 @@ async function generateParams (options) {
     .digest('base64')
 
   // Sign digest and Base64 encode
-  const DIGEST_SIGNATURE = getSignature(PARAMS_DIGEST)
+  const DIGEST_SIGNATURE = getSignature(params)
 
-  console.log('IS VALID: ', verifyResult(PARAMS_DIGEST, DIGEST_SIGNATURE))
+  console.log('IS VALID: ', verifyResult(params, DIGEST_SIGNATURE))
 
   let payload = {
     CLIENTFLOW,
@@ -104,20 +104,25 @@ module.exports = async (req, res) => {
   res.setHeader('content-type', 'text/html')
 
   const TIMESTAMP = +new Date
-  const params = await generateParams({ ORIGIN })
+  const params = await generateParams({ ORIGIN, TIMESTAMP })
 
-  return `<iframe
+  return `
+  <iframe
     id="nemid_iframe"
     allowfullscreen="true"
     scrolling="no"
     frameborder="0"
-    style="width: 320px; height: 460px; outline: 1px dashed;"
+    style="width: 250px; height: 250px"
     src="https://appletk.danid.dk/launcher/lmt/${TIMESTAMP}"
   ></iframe>
 
-  <form method="post" action="#" id="postBackForm">
+  <form method="post" action="#" name="postBackForm">
       <input type="hidden" name="response" value=""/>
   </form>
+
+  <script type="text/x-nemid" id="nemid_parameters">
+    ${JSON.stringify(params, null, 2)}
+  </script>
 
   <script>
     function onNemIDMessage (event) {
@@ -128,14 +133,15 @@ module.exports = async (req, res) => {
       message = JSON.parse(event.data)
       console.log(JSON.stringify(message, null, 2))
       if (message.command === 'SendParameters') {
+        const htmlParameters = document.getElementById("nemid_parameters").innerHTML
         postMessage.command = "parameters"
-        postMessage.content = ${JSON.stringify(params)}
+        postMessage.content = htmlParameters
         frame.postMessage(JSON.stringify(postMessage), 'https://appletk.danid.dk/launcher/std/${TIMESTAMP}')
       }
 
       if (message.command === 'changeResponseAndSubmit') {
-        //document.getElementById('postBackForm').response.value = message.content
-        // document.postBackForm.submit();
+        // document.postBackForm.response.value = message.content
+        // document.postBackForm.submit()
       }
     }
     if (window.addEventListener) {
