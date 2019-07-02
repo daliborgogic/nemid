@@ -1,4 +1,4 @@
-# [poc] nemid
+# [POC] nemid
 
 Download the file DanID Test (gyldig) under [Virksomhedscertifikater](https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Pages/OCES-II-certifikat-eksempler.aspx)
 
@@ -7,10 +7,10 @@ You got your `p12` certificate now generate `*.pem` files, use following command
 Convert it to `certificate.pem`, use the password `Test1234`.
 
 ```bash
-# publicCertificate
+# public
 openssl pkcs12 \
   -in certs/VOCES_gyldig.p12 \
-  -out certs/certificate.pem \
+  -out certs/public.pem \
   -clcerts \
   -nokeys
 ```
@@ -26,17 +26,3 @@ openssl pkcs12 \
   -clcerts \
   -out certs/private.pem
 ```
-
-Openssl will prompt you for a PEM pass phrase.
-
-```bash
-# certifateAndPrivateKey & password (For PID/CPR match)
-openssl pkcs12 \
-  -in certs/VOCES_gyldig.p12 \
-  -out certs/certificateAndPrivateKey.pem \
-  -chain
-```
-
-The `-nodes` flag disables encryption and password protection of your certificates (it has nothing to do with Nodes).
-
-If left out Openssl will prompt you for a PEM pass phrase.
