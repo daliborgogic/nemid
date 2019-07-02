@@ -43,19 +43,6 @@ const verifyResult = (input, output) => {
   return result
 }
 
-function offsetUTC (offset = 0) {
-  const date = new Date()
-  const nowUTC = Date.UTC(
-    date.getUTCFullYear(),
-    date.getUTCMonth(),
-    date.getUTCDate(),
-    date.getUTCHours() + offset,
-    date.getUTCMinutes(),
-    date.getUTCSeconds()
-  )
-  return new Date(nowUTC)
-}
-
 async function generateParams (options) {
   // Determines which NemID flow to start
   const CLIENTFLOW = 'OCESLOGIN2'
@@ -72,7 +59,7 @@ async function generateParams (options) {
   // Current time when generating parameters. The timestamp parameter
   // is converted to UTC and must match the NemID server time.
   // NemID accepts timestamps within the boundaries of 3 minutes.
-  const TIMESTAMP = Buffer.from(options.TIMESTAMP.toString()).toString('base64') //offsetUTC()
+  const TIMESTAMP = Buffer.from(options.TIMESTAMP.toString()).toString('base64')
 
 
   // Base64 and SHA256 Encode it
