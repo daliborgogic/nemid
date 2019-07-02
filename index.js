@@ -129,7 +129,7 @@ module.exports = async (req, res) => {
       console.log(JSON.stringify(message, null, 2))
       if (message.command === 'SendParameters') {
         postMessage.command = "parameters"
-        postMessage.content = ${params}
+        postMessage.content = ${JSON.stringify(params)}
         frame.postMessage(JSON.stringify(postMessage), 'https://appletk.danid.dk/launcher/std/${TIMESTAMP}')
       }
 
