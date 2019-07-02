@@ -13,7 +13,7 @@ const {
 } = process.env
 
 const privateKey = readFileSync('./certs/private.pem')
-const publicKey = readFileSync('./certs/private.pem')
+const publicKey = readFileSync('./certs/public.pem')
 
 const getSignature = input => {
   const sign = createSign('RSA-SHA256')
