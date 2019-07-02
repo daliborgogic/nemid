@@ -1,5 +1,15 @@
 # [POC] nemid
 
+Environment Variables
+
+```bash
+$ cat > .env << EOL
+export PASSWORD=
+export PASS_PHRASE=
+export ORIGIN=
+EOL
+```
+
 Download the file DanID Test (gyldig) under [Virksomhedscertifikater](https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Pages/OCES-II-certifikat-eksempler.aspx)
 
 You got your `p12` certificate now generate `*.pem` files, use following commands:

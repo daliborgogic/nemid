@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "nemid",
+      "script": "npm",
+      "args" : "start"
+    }
+  ]
+}
