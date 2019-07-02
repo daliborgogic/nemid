@@ -14,7 +14,7 @@ Download the file DanID Test (gyldig) under [Virksomhedscertifikater](https://ww
 
 You got your `p12` certificate now generate `*.pem` files, use following commands:
 
-Convert it to `certificate.pem`, use the password `Test1234`.
+Convert it to `public.pem`, use the password `Test1234`.
 
 ```bash
 # public
@@ -30,7 +30,7 @@ NOTE: Remove the initial lines with Bag Attributes if present.
 Only the `-----BEGIN CERTIFICATE-----`, the `base64` encoded certificate and `-----END CERTIFICATE-----` are relevant.
 
 ```bash
-# privateKey & privateKeyPassword
+# private
 openssl pkcs12 \
   -in certs/VOCES_gyldig.p12 \
   -clcerts \
