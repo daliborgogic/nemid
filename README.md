@@ -1,15 +1,5 @@
 # [POC] nemid
 
-Environment Variables
-
-```bash
-$ cat > .env << EOL
-export PASSWORD=Test1234
-export PASS_PHRASE=
-export ORIGIN=
-EOL
-```
-
 Download the file DanID Test (gyldig) under [Virksomhedscertifikater](https://www.nets.eu/dk-da/kundeservice/nemid-tjenesteudbyder/NemID-tjenesteudbyderpakken/Pages/OCES-II-certifikat-eksempler.aspx)
 
 You got your `p12` certificate now generate `*.pem` files, use following commands:
@@ -36,3 +26,19 @@ openssl pkcs12 \
   -clcerts \
   -out certs/private.pem
 ```
+
+### Environment Variables
+
+```bash
+$ cat > .env << EOL
+export PASS_PHRASE=
+export ORIGIN=
+EOL
+```
+
+### NemID (DK) Test Users
+
+There are two available types of NemID test users.
+
+- [NemID til Private (POCES)](https://www.nets.eu/developer/e-ident/eids/Pages/testusers.aspx#poces)
+- [NemID Medarbejdersignatur (MOCES)](https://www.nets.eu/developer/e-ident/eids/Pages/testusers.aspx#moces)
