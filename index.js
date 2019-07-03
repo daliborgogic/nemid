@@ -1,13 +1,11 @@
 const { readFileSync } = require('fs')
 const {
-  createHash,
   createSign,
   createHmac,
   createVerify
 } = require('crypto')
 
 const {
-  PASSWORD,
   PASS_PHRASE,
   ORIGIN
 } = process.env
