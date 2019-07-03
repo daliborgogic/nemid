@@ -50,10 +50,6 @@ async function generateParams (options) {
   // NemID JS Client. The JS Client will abort with `APP001` or `APP007``
   // if a postMessage command is received from any other origin.
   const ORIGIN = Buffer.from(options.ORIGIN).toString('base64')
-  const LANGUAGE = 'dk'
-
-  // Trim certificate
-  let ret = publicKey.toString().replace(/-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----/g, '')
 
   const SP_CERT = Buffer.from(publicKey).toString('base64')
 
