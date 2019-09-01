@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 
 .DS_Store
+TMP.md
 
 # Runtime data
 pids
@@ -28,3 +29,5 @@ node_modules/
 
 # api
 certs/
+.nuxt
+tmp
