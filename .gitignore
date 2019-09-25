@@ -31,3 +31,5 @@ node_modules/
 certs/
 .nuxt
 tmp
+
+NOTE.md
